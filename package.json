@@ -1,5 +1,8 @@
 {
-  "name": "larrylinnui",
+  "name": "@Linn-Htet123/larryui",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/Linn-Htet123"
+  },
   "version": "0.0.1",
   "description": "UI component library for react",
   "type": "module",
