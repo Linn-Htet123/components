@@ -1,15 +1,12 @@
 {
-  "name": "@Linn-Htet123/larryui",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/Linn-Htet123"
-  },
+  "name": "yourpackagename",
   "version": "0.0.1",
   "description": "UI component library for react",
   "type": "module",
   "scripts": {
     "rollup": "rollup -c --bundleConfigAsCjs"
   },
-  "author": "Thar Linn Htet",
+  "author": "yourname",
   "license": "ISC",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",
@@ -21,9 +18,6 @@
     "rollup-plugin-dts": "^4.0.1",
     "tslib": "^2.6.2",
     "typescript": "^4.9.5"
-  },
-  "peerDependencies": {
-    
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

@@ -2461,7 +2461,7 @@ if (process.env.NODE_ENV === 'production') {
 var React = react.exports;
 
 var Button = function (props) {
-    return React.createElement("button", null, props.label);
+    return (React.createElement("button", { style: { background: "red", color: "white" } }, props.label));
 };
 
 exports.Button = Button;
