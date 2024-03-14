@@ -1,43 +1,58 @@
-import resolve from "@rollup/plugin-node-resolve";
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import nodeResolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
-import dts from "rollup-plugin-dts";
-import { terser } from "rollup-plugin-terser";
-import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import autoprefixer from "autoprefixer";
+import postcssPresetEnv from "postcss-preset-env";
+import stringHash from "string-hash";
+// import { terser } from "rollup-plugin-terser";
 
-const packageJson = require("./package.json");
+const extensions = [".js", ".jsx", ".ts", ".tsx"];
+const globals = {
+  react: "React",
+  "react-dom": "ReactDOM",
+};
 
-export default [
-  {
-    input: "src/index.ts",
-    output: [
-      {
-        file: packageJson.main,
-        format: "cjs",
-        sourcemap: true,
+export default {
+  input: ["./src/index.ts"],
+  output: [
+    {
+      file: "./dist/index.esm.js",
+      format: "esm",
+      globals,
+    },
+    {
+      file: "./dist/index.cjs.js",
+      format: "cjs",
+      globals,
+    },
+  ],
+  plugins: [
+    peerDepsExternal(),
+    nodeResolve({ extensions, browser: true }),
+    commonjs(),
+    typescript(),
+    // we'll need some extra configuration for this one later
+    postcss({
+      plugins: [postcssPresetEnv(), autoprefixer()],
+      autoModules: false,
+      onlyModules: false,
+      modules: {
+        generateScopedName: (name, filename, css) => {
+          if (filename.includes("global")) {
+            return name;
+          }
+          const hash = stringHash(css).toString(36).substring(0, 5);
+          return `component_${name}_${hash}`;
+        },
       },
-      {
-        file: packageJson.module,
-        format: "esm",
-        sourcemap: true,
-      },
-    ],
-    plugins: [
-      peerDepsExternal(),
-
-      resolve(),
-      commonjs(),
-      typescript({ tsconfig: "./tsconfig.json" }),
-      postcss(),
-
-      terser(),
-    ],
-  },
-  {
-    input: "dist/esm/index.d.ts",
-    output: [{ file: "dist/index.d.ts", format: "esm" }],
-    plugins: [dts()],
-    external: [/\.scss$/],
-  },
-];
+      extract: "css/component-library.min.css",
+      extensions: [".scss"],
+      use: ["sass"],
+      minimize: true,
+      sourceMap: false,
+    }),
+    // terser(), // will use later to minify
+  ],
+};
