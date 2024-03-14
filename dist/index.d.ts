@@ -6,4 +6,6 @@ interface ButtonProps {
 
 declare const Button: (props: ButtonProps) => React.JSX.Element;
 
-export { Button };
+declare const Test: () => React.JSX.Element;
+
+export { Button, Test };
